@@ -1,5 +1,4 @@
 import static cucumber.api.groovy.EN.*
-import com.santaba.agent.groovyapi.http.*
 
 def learn
 def doc
