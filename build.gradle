@@ -25,4 +25,6 @@ dependencies {
     def cucumberVersion ='1.2.2'
     testCompile "info.cukes:cucumber-groovy:$cucumberVersion"
     testCompile "info.cukes:cucumber-junit:$cucumberVersion"
+
+    compile 'net.sourceforge.jtds:jtds:1.2.7'
 }
