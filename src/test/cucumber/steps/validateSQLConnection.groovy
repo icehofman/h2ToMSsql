@@ -24,26 +24,30 @@ Then(~/^connection is successful to SqlServer$/) { ->
 
     if(sqlServer){
         def createTbl = '''
-CREATE TABLE things (
-  id INT PRIMARY KEY,
-  thing1 VARCHAR(50),
-  thing2 VARCHAR(100)
-)
-'''
+        CREATE TABLE things (
+          id uniqueidentifier PRIMARY KEY NOT NULL
+          DEFAULT newid(),
+          thing1 VARCHAR(50),
+          thing2 VARCHAR(100)
+        )
+        '''
 
-def dropTable = '''
-IF  EXISTS (
-SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'things') AND type in (N'U')
-)
-DROP TABLE things
+        def dropTable = '''
+        IF  EXISTS (
+        SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'things') AND type in (N'U')
+        )
+        DROP TABLE things
+        '''
 
-'''
         sqlServer.execute(dropTable)
         sqlServer.execute(createTbl)
-        sqlServer.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 0, thing1: 'I am thing1', thing2: 'I am thing2'])
-        sqlServer.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 1, thing1: 'foo', thing2: 'bar'])
-        sqlServer.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 2, thing1: 'Alisa', thing2: 'Yeoh'])
-        sqlServer.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 3, thing1: 'Israel', thing2: 'Hofman'])
+
+        def valuesThings = 'thing1,thing2'
+
+        sqlServer.execute "INSERT INTO things ($valuesThings) VALUES(:thing1, :thing2)", [thing1: 'I am thing1', thing2: 'I am thing2']
+        sqlServer.execute "INSERT INTO things ($valuesThings) VALUES(:thing1, :thing2)", [thing1: 'foo', thing2: 'bar']
+        sqlServer.execute "INSERT INTO things ($valuesThings) VALUES(:thing1, :thing2)", [thing1: 'Alisa', thing2: 'Yeoh']
+        sqlServer.execute "INSERT INTO things ($valuesThings) VALUES(:thing1, :thing2)", [thing1: 'Israel', thing2: 'Hofman']
 
         def query = "SELECT * FROM things"
 
