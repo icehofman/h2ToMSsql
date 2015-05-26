@@ -10,7 +10,8 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    compile 'com.sparkjava:spark-core:2.1'
+    compile 'com.h2database:h2:1.3.176'
+    compile 'net.sourceforge.jtds:jtds:1.2.7'
 
     def jacksonVersion = '2.5.3'
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
@@ -25,7 +26,4 @@ dependencies {
     def cucumberVersion ='1.2.2'
     testCompile "info.cukes:cucumber-groovy:$cucumberVersion"
     testCompile "info.cukes:cucumber-junit:$cucumberVersion"
-
-    compile 'net.sourceforge.jtds:jtds:1.2.7'
-    compile 'com.h2database:h2:1.3.176'
 }
