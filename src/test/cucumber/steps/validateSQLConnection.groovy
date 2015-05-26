@@ -12,15 +12,15 @@ catch (all){
 
 }
 
-Given(~/^database$/) { ->
+Given(~/^database groovy on SqlServer$/) { ->
       db
 }
 
-When(~/^connect$/) { ->
+When(~/^connect to SqlServer$/) { ->
     sql
 }
 
-Then(~/^connection is sucessful$/) { ->
+Then(~/^connection is successful to SqlServer$/) { ->
     if(sql){
         if(!sql.connection.isClosed()){
             sql.close()
