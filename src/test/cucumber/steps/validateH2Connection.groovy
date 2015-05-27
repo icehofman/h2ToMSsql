@@ -17,17 +17,20 @@ Then(~/^connection is successful  to HTwo$/) { ->
 
     if(sqlH2){
         def createTbl = '''
-CREATE TABLE things (
-  id INT PRIMARY KEY,
-  thing1 VARCHAR(50),
-  thing2 VARCHAR(100)
-)
-'''
+                        CREATE TABLE things (
+                          id UUID PRIMARY KEY,
+                          thing1 VARCHAR(50),
+                          thing2 VARCHAR(100)
+                        )
+                        '''
+
         sqlH2.execute("DROP TABLE IF EXISTS things")
+
         sqlH2.execute(createTbl)
-        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 0, thing1: 'I am thing1', thing2: 'I am thing2'])
-        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 1, thing1: 'foo', thing2: 'bar'])
-        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id: 2, thing1: 'Alisa', thing2: 'Yeoh'])
+
+        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id:  java.util.UUID.randomUUID(), thing1: 'I am thing1', thing2: 'I am thing2'])
+        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id:  java.util.UUID.randomUUID(), thing1: 'foo', thing2: 'bar'])
+        sqlH2.execute("INSERT INTO things VALUES(:id, :thing1, :thing2)", [id:  java.util.UUID.randomUUID(), thing1: 'Alisa', thing2: 'Yeoh'])
 
         def query = "SELECT * FROM things"
 
