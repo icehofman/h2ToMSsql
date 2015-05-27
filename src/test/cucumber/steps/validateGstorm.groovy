@@ -4,9 +4,9 @@ import static cucumber.api.groovy.EN.*
 
 class Person { String name; int age }
 
-def db = [url:'jdbc:h2:things', user:'sa', password:'sa', driver:'org.h2.Driver']
+def dbh2 = [url:'jdbc:h2:things', user:'sa', password:'sa', driver:'org.h2.Driver']
 
-def sqlh2 = Sql.newInstance(db.url, db.user, db.password, db.driver)
+def sqlh2 = Sql.newInstance(dbh2.url, dbh2.user, dbh2.password, dbh2.driver)
 
 def g = new Gstorm(sqlh2)
 
