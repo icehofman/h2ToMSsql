@@ -13,16 +13,15 @@ catch (all){
 }
 
 Given(~/^database groovy on SqlServer$/) { ->
-      db
+    assert 'jdbc:jtds:sqlserver://ICEHOFMAN-PC:1433/groovy' == db.url
 }
 
 When(~/^connect to SqlServer$/) { ->
-    sqlServer
+    if (sqlServer) assert 'ICEHOFMAN-PC' == sqlServer.useConnection.serverName
 }
 
-Then(~/^connection is successful to SqlServer$/) { ->
-
-    if(sqlServer){
+Then(~/^create table 'things' on SqlServer$/) { ->
+    if(sqlServer) {
         def createTbl = '''
         CREATE TABLE things (
           id uniqueidentifier PRIMARY KEY NOT NULL
@@ -54,8 +53,19 @@ Then(~/^connection is successful to SqlServer$/) { ->
         sqlServer.eachRow(query) { row ->
             println "$row.id - ${row.thing1}::$row.thing2"
         }
-        if(!sqlServer.connection.isClosed()){
+
+        def result = sqlServer.rows(query)
+
+        assert 4 == result.size()
+    }
+}
+
+Then(~/^close connection$/) { ->
+    if(sqlServer) {
+        if (!sqlServer.connection.isClosed()) {
             sqlServer.close()
         }
+
+        assert sqlServer.connection.isClosed() == sqlServer.connection.isClosed()
     }
 }
