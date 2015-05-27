@@ -6,15 +6,15 @@ def db = [url:'jdbc:h2:things', user:'sa', password:'sa', driver:'org.h2.Driver'
 def sqlH2 = Sql.newInstance(db.url, db.user, db.password, db.driver)
 
 Given(~/^database groovy on HTwo$/) { ->
-    db
+    assert 'jdbc:h2:things' == db.url
 }
 
 When(~/^connect to HTwo$/) { ->
     sqlH2
+    if (sqlH2) assert 'SA' == sqlH2.useConnection.user
 }
 
-Then(~/^connection is successful  to HTwo$/) { ->
-
+Then(~/^create table 'things' on HTwo$/) { ->
     if(sqlH2){
         def createTbl = '''
                         CREATE TABLE things (
@@ -38,7 +38,15 @@ Then(~/^connection is successful  to HTwo$/) { ->
             println "$row.id - ${row.thing1}::$row.thing2"
         }
 
-        if(!sqlH2.connection.isClosed()){
+        def result = sqlH2.rows(query)
+
+        assert 3 == result.size()
+    }
+}
+
+Then(~/^close connection to HTwo$/) { ->
+    if(sqlH2) {
+        if (!sqlH2.connection.isClosed()) {
             sqlH2.close()
         }
     }

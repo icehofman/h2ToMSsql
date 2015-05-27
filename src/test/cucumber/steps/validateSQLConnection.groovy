@@ -60,7 +60,7 @@ Then(~/^create table 'things' on SqlServer$/) { ->
     }
 }
 
-Then(~/^close connection$/) { ->
+Then(~/^close connection to SqlServer$/) { ->
     if(sqlServer) {
         if (!sqlServer.connection.isClosed()) {
             sqlServer.close()
