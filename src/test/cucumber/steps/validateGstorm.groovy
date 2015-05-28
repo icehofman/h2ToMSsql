@@ -16,6 +16,8 @@ Given(~/^the class 'Person'$/) { ->
     assert 'Person' ==  Person.name
 }
 
+
+//H2
 When(~/^using the Gstorm on Htwo$/) { ->
     if (sqlh2) {
         def result = sqlh2.rows("select count(*) from information_schema.columns where table_name = 'person'")
@@ -24,10 +26,9 @@ When(~/^using the Gstorm on Htwo$/) { ->
     }
 }
 
+//H2
 Then(~/^must create a new record on Htwo$/) { ->
     if (sqlh2) {
-        // cool stuff -- but does that require a class or would a map do the trick?
-//A simple answer... A class.
         new Person(name: 'Batman', age: 35).save()
 
         new Person(name: 'Spiderman', age: 30).save()
@@ -36,4 +37,15 @@ Then(~/^must create a new record on Htwo$/) { ->
 
         assert Person.all.collect {it.name} == g.sql.rows("select * from person").collect {it.name}
     }
+}
+
+//SqlServer
+When(~/^using the Gstorm on SqlServer$/) { ->
+
+}
+
+//SqlServer
+Then(~/^must create a new record on SqlServer$/) { ->
+
+
 }
