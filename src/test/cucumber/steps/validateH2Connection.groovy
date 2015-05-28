@@ -10,7 +10,6 @@ Given(~/^database groovy on HTwo$/) { ->
 }
 
 When(~/^connect to HTwo$/) { ->
-    sqlH2
     if (sqlH2) assert 'SA' == sqlH2.useConnection.user
 }
 

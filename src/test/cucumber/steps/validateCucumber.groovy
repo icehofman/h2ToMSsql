@@ -1,17 +1,17 @@
 import static cucumber.api.groovy.EN.*
 
-def learn
-def doc
+def learn = 'learn'
+def doc = 'doc'
 
 Given(~/^I am learning Cucumber$/) { ->
-    def ok = learn
+    assert 'learn' == learn
 }
 
 When(~/^I want to see documentation$/) { ->
-    def ok = doc
+    assert 'doc' == doc
 }
 
 Then(~/^the site is available$/) { ->
-    String html = 'http://cukes.info'.toURL().text
-    html.contains('Cucumber')
+    def html = 'http://www.mrhaki.com/url.html'.toURL().text
+    assert true == html.contains('Groovy')
 }

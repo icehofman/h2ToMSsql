@@ -58,5 +58,7 @@
     <orderEntry type="library" scope="TEST" name="Gradle: xml-apis:xml-apis:1.3.04" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.h2database:h2:1.3.176" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.sourceforge.jtds:jtds:1.2.7" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: gstorm:gstorm:0.6" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.hsqldb:hsqldb:2.3.2" level="project" />
   </component>
 </module>
