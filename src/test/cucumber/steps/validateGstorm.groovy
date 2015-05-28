@@ -27,9 +27,10 @@ When(~/^using the Gstorm on Htwo$/) { ->
 Then(~/^must create a new record on Htwo$/) { ->
     if (sqlh2) {
         // cool stuff -- but does that require a class or would a map do the trick?
-        def batman = new Person(name: 'Batman', age: 35).save()
+//A simple answer... A class.
+        new Person(name: 'Batman', age: 35).save()
 
-        def spiderman = new Person(name: 'Spiderman', age: 30).save()
+        new Person(name: 'Spiderman', age: 30).save()
 
         println "all records -> ${Person.all}"
 
