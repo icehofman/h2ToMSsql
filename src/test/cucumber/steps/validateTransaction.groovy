@@ -1,5 +1,3 @@
-import groovy.sql.Sql
-
 import static cucumber.api.groovy.EN.*
 import groovy.sql.Sql
 
@@ -14,6 +12,13 @@ catch (all){
     println "#### Error SqlServer Transaction####"
 }
 
+class Orders{
+    String orderNumber
+    String orderDesc
+    String toString() { orderNumber }
+}
+
+def orders = []
 
 Given(~/^An existing database$/) { ->
     assert 'jdbc:jtds:sqlserver://ICEHOFMAN-PC:1433/groovy' == db.url
@@ -48,9 +53,15 @@ Given(~/^its respective table$/) { ->
 }
 
 When(~/^creating a record in SqlServer$/) { ->
+    orders << new Orders(orderNumber: '123abc', orderDesc: 'Test01')
+    orders << new Orders(orderNumber: '000abc', orderDesc: 'Test02')
+    orders << new Orders(orderNumber: '123456', orderDesc: 'Test03')
+    orders << new Orders(orderNumber: 'defghi', orderDesc: 'Test04')
+    orders << new Orders(orderNumber: 'xyz789', orderDesc: 'Test05')
 
+    assert 5 == orders.size()
 }
 
 Then(~/^use transaction in SqlServer$/) { ->
-
+    assert '[defghi]'== orders.findAll{ it.orderDesc == 'Test04'}.toString()
 }
