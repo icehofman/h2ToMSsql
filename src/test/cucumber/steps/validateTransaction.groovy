@@ -63,5 +63,14 @@ When(~/^creating a record in SqlServer$/) { ->
 }
 
 Then(~/^use transaction in SqlServer$/) { ->
-    assert '[defghi]'== orders.findAll{ it.orderDesc == 'Test04'}.toString()
+    if (sqlServer) {
+        def valuesOrders = 'OrderNumber,OrderDesc'
+        sqlServer.withTransaction {
+            orders.forEach() {
+                sqlServer.execute "INSERT INTO Orders ($valuesOrders) VALUES(:orderNumber, :orderDesc)", [orderNumber: it.orderNumber, orderDesc: it.orderDesc]
+            }
+        }
+
+        assert orders.size() == sqlServer.rows("select * from Orders").size()
+    }
 }
