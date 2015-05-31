@@ -3,6 +3,6 @@ Feature: Validate DataSet
     Given An existing database 'Groovy'
     And its respective table 'SimpleOrders'
 
-  Scenario: Test the dataset in SqlServer
-    When creating a record with dataset in SqlServer
-    Then validate the new record with dataset in SqlServer
+  Scenario: Test the dataset
+    When creating a record with dataset
+    Then validate the new record with dataset

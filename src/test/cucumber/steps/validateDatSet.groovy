@@ -1,27 +1,41 @@
 import groovy.sql.*
 import static cucumber.api.groovy.EN.*
 
-def db = [url:'jdbc:jtds:sqlserver://ICEHOFMAN-PC:1433/groovy', user:'groovy', password:'groovy', driver:'net.sourceforge.jtds.jdbc.Driver']
-
-def sqlServer
-
+def db
+def sql
+def createTbl
+def dropTable
+def countRows
 def setOfSimpleOrder
+def order
 
 try {
-    sqlServer = Sql.newInstance(db.url, db.user, db.password, db.driver)
-    setOfSimpleOrder = new DataSet(sqlServer, 'SimpleOrders')
+    db = [
+            url:'jdbc:jtds:sqlserver://ICEHOFMAN-PC:1433/groovy',
+            user:'groovy',
+            password:'groovy',
+            driver:'net.sourceforge.jtds.jdbc.Driver'
+    ]
+
+    sql = Sql.newInstance(db.url, db.user, db.password, db.driver)
 }
 catch (all){
-    println "#### Error SqlServer Transaction####"
+    db = [
+            url:'jdbc:h2:groovy',
+            user:'sa',
+            password:'sa',
+            driver:'org.h2.Driver'
+        ]
+
+    sql = Sql.newInstance(db.url, db.user, db.password, db.driver)
+}
+finally {
+    setOfSimpleOrder = new DataSet(sql, 'SimpleOrders')
 }
 
-Given(~/^An existing database 'Groovy'$/) { ->
-    assert 'jdbc:jtds:sqlserver://ICEHOFMAN-PC:1433/groovy' == db.url
-}
-
-Given(~/^its respective table 'SimpleOrders'$/) { ->
-    if(sqlServer) {
-        def createTbl = '''
+if(db.url.contains('sqlserver')) {
+    createTbl =
+        '''
         CREATE TABLE SimpleOrders (
           id uniqueidentifier PRIMARY KEY NOT NULL
           DEFAULT newid(),
@@ -30,32 +44,57 @@ Given(~/^its respective table 'SimpleOrders'$/) { ->
         )
         '''
 
-        def dropTable = '''
+    dropTable =
+        '''
         IF  EXISTS (
         SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'SimpleOrders') AND type in (N'U')
         )
         DROP TABLE SimpleOrders
         '''
 
-        sqlServer.execute(dropTable)
+    countRows =
+        '''
+        SELECT * FROM sys.objects
+        WHERE object_id = OBJECT_ID(N'SimpleOrders') AND type in (N'U')
+        '''
 
-        sqlServer.execute(createTbl)
+    order = [
+            orderNumber: '000abcd',
+            orderDesc: 'Test001'
+            ]
+} else {
+    createTbl =
+        '''
+         CREATE TABLE SimpleOrders (
+           id UUID PRIMARY KEY,
+           OrderNumber NVARCHAR(50),
+           OrderDesc NVARCHAR(100)
+         )
+         '''
 
-        def result = sqlServer.rows("SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'SimpleOrders') AND type in (N'U')")
+    dropTable = 'DROP TABLE IF EXISTS SimpleOrders'
 
-        assert 1 == result.size()
-    }
+    countRows = "select count(*) from information_schema.columns where table_name = 'SimpleOrders'"
+
+    order = [
+                id: java.util.UUID.randomUUID(),
+                orderNumber: '000abcd',
+                orderDesc: 'Test001'
+            ]
 }
 
-When(~/^creating a record with dataset in SqlServer$/) { ->
-    if(sqlServer) {
-        setOfSimpleOrder.add(orderNumber: '000abc', orderDesc: 'Test01')
-    }
+Given(~/^An existing database 'Groovy'$/) { ->
+    assert true == db.url.contains('groovy')
 }
-
-Then(~/^validate the new record with dataset in SqlServer$/) { ->
-    if(sqlServer) {
-        def rows = setOfSimpleOrder.rows()
-        assert 1 == rows.size()
-    }
+Given(~/^its respective table 'SimpleOrders'$/) { ->
+    sql.execute(dropTable)
+    sql.execute(createTbl)
+    assert 1 == sql.rows(countRows).size()
+}
+When(~/^creating a record with dataset$/) { ->
+    setOfSimpleOrder.add(order)
+}
+Then(~/^validate the new record with dataset$/) { ->
+    def rows = setOfSimpleOrder.rows()
+    assert 1 == rows.size()
 }
