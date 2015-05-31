@@ -83,12 +83,13 @@ if(db.url.contains('sqlserver')) {
             ]
 }
 
+sql.execute(dropTable)
+sql.execute(createTbl)
+
 Given(~/^An existing database 'Groovy'$/) { ->
     assert true == db.url.contains('groovy')
 }
 Given(~/^its respective table 'SimpleOrders'$/) { ->
-    sql.execute(dropTable)
-    sql.execute(createTbl)
     assert 1 == sql.rows(countRows).size()
 }
 When(~/^creating a record with dataset$/) { ->
