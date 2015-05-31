@@ -19,6 +19,8 @@ Given(~/^the class 'Person'$/) { ->
 //H2
 When(~/^using the Gstorm on Htwo$/) { ->
     if (sqlh2) {
+        sqlh2.execute("DROP TABLE IF EXISTS Person")
+
         gh2.stormify(Person)
 
         def result = sqlh2.rows("select count(*) from information_schema.columns where table_name = 'person'")
