@@ -12,6 +12,6 @@ When(~/^I want to see documentation$/) { ->
 }
 
 Then(~/^the site is available$/) { ->
-    def html = 'http://www.mrhaki.com/url.html'.toURL().text
+    def html = 'http://www.mrhaki.com'.toURL().text
     assert true == html.contains('Groovy')
 }
